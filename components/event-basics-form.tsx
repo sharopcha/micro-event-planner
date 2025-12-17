@@ -77,12 +77,15 @@ export function EventBasicsForm({ event }: EventBasicsFormProps) {
     async (values) => {
       setIsSaving(true)
       try {
-        // Convert dates to string for Supabase
+        // Convert dates to string for Supabase and handle empty strings as null
         const updateData = {
           ...values,
+          name: values.name?.trim() || null,
           date: values.date ? format(values.date, 'yyyy-MM-dd') : null,
-          guest_count: values.guest_count || null, // store as null if 0/undefined for draft
+          time: values.time || null,
+          guest_count: values.guest_count || null,
           budget: values.budget || null,
+          city: values.city?.trim() || null,
         }
         // Remove helper fields
         delete (updateData as any).is_tbd
