@@ -274,9 +274,18 @@ export function EventBasicsForm({ event }: EventBasicsFormProps) {
         </div>
 
         <div className="flex justify-between pt-6">
-           <p className="text-sm text-muted-foreground self-center">
-             {isSaving ? 'Saving...' : 'Draft saved'}
-           </p>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => router.push('/create')}
+            >
+              Back
+            </Button>
+            <p className="text-sm text-muted-foreground self-center">
+              {isSaving ? 'Saving...' : 'Draft saved'}
+            </p>
+          </div>
            <Button type="submit" size="lg">
              Next: Addons
            </Button>

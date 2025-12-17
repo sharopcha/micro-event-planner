@@ -5,7 +5,7 @@ import { WizardProgress } from '@/components/wizard-progress'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { CalendarDays, Users, Wallet, MapPin, Check, Edit } from 'lucide-react'
+import { CalendarDays, Users, Wallet, MapPin, Check, Edit, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { format } from 'date-fns'
@@ -144,11 +144,18 @@ export default async function ReviewPage({
                  </div>
               </div>
 
-              <form action={createCheckoutSession.bind(null, id)}>
-                <Button className="w-full" size="lg" disabled={!event.total_price || event.total_price <= 0}>
-                  <Check className="mr-2 h-4 w-4" /> Checkout
-                </Button>
-              </form>
+              <div className="flex flex-col gap-2">
+                <form action={createCheckoutSession.bind(null, id)}>
+                  <Button className="w-full" size="lg" disabled={!event.total_price || event.total_price <= 0}>
+                    <Check className="mr-2 h-4 w-4" /> Checkout
+                  </Button>
+                </form>
+                <Link href={`/create/addons?id=${id}`}>
+                  <Button variant="ghost" className="w-full">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Addons
+                  </Button>
+                </Link>
+              </div>
               <p className="text-xs text-center text-muted-foreground">
                 Secure payment via Stripe
               </p>

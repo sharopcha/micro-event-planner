@@ -67,11 +67,18 @@ export function AddonCartSummary({ items, eventId, onRemove }: AddonCartSummaryP
            <span>€{total}</span>
         </div>
 
-        <Link href={`/create/review?id=${eventId}`}>
-          <Button className="w-full" disabled={items.length === 0}>
-             Review & Checkout
-          </Button>
-        </Link>
+        <div className="space-y-2">
+          <Link href={`/create/review?id=${eventId}`}>
+            <Button className="w-full" disabled={items.length === 0}>
+              Review & Checkout
+            </Button>
+          </Link>
+          <Link href={`/create/basics?id=${eventId}`}>
+            <Button variant="ghost" className="w-full">
+              Back to Basics
+            </Button>
+          </Link>
+        </div>
       </CardContent>
     </Card>
   )
