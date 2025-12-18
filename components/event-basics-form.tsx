@@ -35,7 +35,7 @@ const formSchema = z.object({
   name: z.string().optional(),
   date: z.date().optional(),
   time: z.string().optional(),
-  is_tbd: z.boolean().default(false),
+  is_tbd: z.boolean(),
   guest_count: z.coerce.number().min(1, 'At least 1 guest required').optional(), // Optional for draft, validated at checkout
   budget: z.coerce.number().min(0).optional(),
   city: z.string().optional(),
@@ -105,7 +105,7 @@ export function EventBasicsForm({ event }: EventBasicsFormProps) {
     // For navigation to Addons, we might not block, but good to validate.
     
     // Just navigate to addons
-    router.push(`/create/addons?id=${event.id}`)
+    router.push(`/create/selection?id=${event.id}`)
   }
 
   return (
@@ -287,7 +287,7 @@ export function EventBasicsForm({ event }: EventBasicsFormProps) {
             </p>
           </div>
            <Button type="submit" size="lg">
-             Next: Addons
+            Next: Selection
            </Button>
         </div>
       </form>

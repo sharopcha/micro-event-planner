@@ -92,7 +92,7 @@ export default async function ReviewPage({
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-lg font-semibold">Selected Addons</CardTitle>
-              <Link href={`/create/addons?id=${id}`}>
+              <Link href={`/create/selection?id=${id}`}>
                 <Button variant="ghost" size="sm"><Edit className="h-4 w-4 mr-1" /> Edit</Button>
               </Link>
             </CardHeader>
@@ -150,9 +150,9 @@ export default async function ReviewPage({
                     <Check className="mr-2 h-4 w-4" /> Checkout
                   </Button>
                 </form>
-                <Link href={`/create/addons?id=${id}`}>
+                <Link href={`/create/selection?id=${id}`}>
                   <Button variant="ghost" className="w-full">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Addons
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Selection
                   </Button>
                 </Link>
               </div>

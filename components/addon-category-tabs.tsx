@@ -12,6 +12,7 @@ interface AddonCategoryTabsProps {
 }
 
 const categories: { id: AddonCategory; label: string }[] = [
+  { id: 'venue', label: 'Venue' },
   { id: 'decor', label: 'Decor' },
   { id: 'food', label: 'Food' },
   { id: 'drinks', label: 'Drinks' },

@@ -12,7 +12,7 @@ export function WizardProgress({ currentStep }: WizardProgressProps) {
   const steps = [
     { number: 1, label: 'Type' },
     { number: 2, label: 'Basics' },
-    { number: 3, label: 'Addons' },
+    { number: 3, label: 'Selection' },
     { number: 4, label: 'Review' },
   ]
 
