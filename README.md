@@ -60,6 +60,9 @@ Manages secure public access to specific events.
 
 - Node.js (v18+ recommended)
 - pnpm (or npm/yarn)
+- **Docker is Required** for local Supabase development.
+  - **Windows Users**: You MUST install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and ensure it is running in the background.
+  - **Mac/Linux**: Ensure Docker is installed and the daemon is active.
 
 ### Installation
 
