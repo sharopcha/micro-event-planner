@@ -90,6 +90,18 @@ Manages secure public access to specific events.
     pnpm supabase migration up
     ```
 
+### Running Supabase Locally
+
+To start the local Supabase stack (requires Docker):
+```bash
+npx supabase start
+```
+
+To stop the details Supabase stack:
+```bash
+npx supabase stop
+```
+
 ### Running the Application
 
 Start the development server:
