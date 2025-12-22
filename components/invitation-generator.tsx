@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -11,6 +11,7 @@ import { generateInvitationContent } from '@/lib/actions/invitations'
 import { Loader2, Sparkles, Share2, Download } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { useReactToPrint } from 'react-to-print'
 
 interface InvitationGeneratorProps {
   eventId: string
@@ -22,6 +23,12 @@ export function InvitationGenerator({ eventId, initialContent }: InvitationGener
   const [tone, setTone] = useState('friendly')
   const [length, setLength] = useState('short')
   const [generating, setGenerating] = useState(false)
+
+  const componentRef = useRef<HTMLDivElement>(null)
+
+  const handlePrint = useReactToPrint({
+    contentRef: componentRef,
+  })
 
   const handleGenerate = async () => {
     setGenerating(true)
@@ -103,8 +110,12 @@ export function InvitationGenerator({ eventId, initialContent }: InvitationGener
                   <Share2 className="mr-2 h-4 w-4" /> View Public Page
                 </Button>
               </Link>
-              <Button variant="secondary" className="w-full" disabled>
-                 <Download className="mr-2 h-4 w-4" /> Download PDF (Coming Soon)
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={() => handlePrint()}
+              >
+                <Download className="mr-2 h-4 w-4" /> Download / Print
               </Button>
             </CardContent>
           </Card>
@@ -122,7 +133,10 @@ export function InvitationGenerator({ eventId, initialContent }: InvitationGener
                   Creating magic...
                 </div>
              ) : (
-               <div className="space-y-4 font-serif text-slate-800 p-6 bg-white shadow-sm rounded-lg">
+                <div
+                  ref={componentRef}
+                  className="space-y-4 font-serif text-slate-800 p-6 bg-white shadow-sm rounded-lg"
+                >
                  <div className="space-y-2">
                     <Label className="text-xs text-muted-foreground uppercase tracking-wide">Headline</Label>
                     <Input 
