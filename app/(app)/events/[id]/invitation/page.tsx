@@ -50,6 +50,7 @@ export default async function InvitationPage({
 
       <InvitationGenerator 
         eventId={id} 
+        event={event}
         initialContent={invitation?.content}
       />
     </div>
