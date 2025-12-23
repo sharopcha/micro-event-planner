@@ -70,7 +70,7 @@ export function AddonCartSummary({ items, eventId, onRemove }: AddonCartSummaryP
         <div className="space-y-2">
           <Link href={`/create/review?id=${eventId}`}>
             <Button className="w-full" disabled={items.length === 0}>
-              Review & Checkout
+              Review & Finish
             </Button>
           </Link>
           <Link href={`/create/basics?id=${eventId}`}>

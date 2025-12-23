@@ -24,7 +24,7 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
   const [stage, setStage] = useState<'venue' | 'services'>(
     selectedAddons.some(sa => {
       const addon = addons.find(a => a.id === sa.addon_id)
-      return addon?.category === 'venue'
+      return (addon?.category as string) === 'venue'
     }) ? 'services' : 'venue'
   )
   const [category, setCategory] = useState('decor')
@@ -35,12 +35,12 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
   })
   const [loadingId, setLoadingId] = useState<string | null>(null)
 
-  const venues = addons.filter(a => a.category === 'venue')
-  const filteredServices = addons.filter(a => a.category === category && a.category !== 'venue')
+  const venues = addons.filter(a => (a.category as string) === 'venue')
+  const filteredServices = addons.filter(a => a.category === category && (a.category as string) !== 'venue')
 
   const selectedVenueId = Object.keys(optimisticCart).find(id => {
     const addon = addons.find(a => a.id === id)
-    return addon?.category === 'venue' && optimisticCart[id] > 0
+    return (addon?.category as string) === 'venue' && optimisticCart[id] > 0
   })
 
   const handleSelectVenue = async (venue: Addon) => {
@@ -162,7 +162,7 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
               
               <Link href={`/create/review?id=${eventId}`}>
                 <Button className="group" size="lg">
-                  Review & Checkout <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    Review & Finish <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
             </div>

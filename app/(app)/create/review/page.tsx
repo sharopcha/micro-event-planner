@@ -1,6 +1,6 @@
 import { getEvent } from '@/lib/actions/events'
 import { getEventAddons } from '@/lib/actions/addons'
-import { createCheckoutSession } from '@/lib/actions/checkout'
+import { finalizeEvent } from '@/lib/actions/events-finalization'
 import { WizardProgress } from '@/components/wizard-progress'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -145,9 +145,9 @@ export default async function ReviewPage({
               </div>
 
               <div className="flex flex-col gap-2">
-                <form action={createCheckoutSession.bind(null, id)}>
-                  <Button className="w-full" size="lg" disabled={!event.total_price || event.total_price <= 0}>
-                    <Check className="mr-2 h-4 w-4" /> Checkout
+                <form action={finalizeEvent.bind(null, id)}>
+                  <Button className="w-full" size="lg">
+                    <Check className="mr-2 h-4 w-4" /> Finish & Create Invitation
                   </Button>
                 </form>
                 <Link href={`/create/selection?id=${id}`}>
