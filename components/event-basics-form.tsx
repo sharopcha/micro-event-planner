@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { format } from 'date-fns'
@@ -36,9 +36,18 @@ const formSchema = z.object({
   date: z.date().optional(),
   time: z.string().optional(),
   is_tbd: z.boolean(),
-  guest_count: z.coerce.number().min(1, 'At least 1 guest required').optional(), // Optional for draft, validated at checkout
-  budget: z.coerce.number().min(0).optional(),
+  guest_count: z.preprocess(
+    (val) => (val === '' ? undefined : Number(val)),
+    z.number().min(1, 'At least 1 guest required').optional()
+  ),
+  budget: z.preprocess(
+    (val) => (val === '' ? undefined : Number(val)),
+    z.number().min(0).optional()
+  ),
   city: z.string().optional(),
+  contact_name: z.string().min(2, "Name is required").optional().or(z.literal('')),
+  contact_email: z.string().email("Invalid email").optional().or(z.literal('')),
+  contact_phone: z.string().optional(),
 })
 
 type EventBasicsFormValues = z.infer<typeof formSchema>
@@ -46,24 +55,32 @@ type Event = Database['public']['Tables']['events']['Row']
 
 interface EventBasicsFormProps {
   event: Event
+  userDefaults?: {
+    name?: string
+    email?: string
+    phone?: string
+  }
 }
 
-export function EventBasicsForm({ event }: EventBasicsFormProps) {
+export function EventBasicsForm({ event, userDefaults }: EventBasicsFormProps) {
   const router = useRouter()
   const [isSaving, setIsSaving] = useState(false)
 
   const defaultValues: Partial<EventBasicsFormValues> = {
     name: event.name || '',
     date: event.date ? new Date(event.date) : undefined,
-    time: event.time || '', // Time might need better handling if it's strictly TIME type
-    is_tbd: !event.date, // Logic: if no date set, assume TBD or just unset
+    time: event.time || '',
+    is_tbd: !event.date,
     guest_count: event.guest_count || 0,
     budget: event.budget || 0,
     city: event.city || '',
+    contact_name: event.contact_name || userDefaults?.name || '',
+    contact_email: event.contact_email || userDefaults?.email || '',
+    contact_phone: event.contact_phone || userDefaults?.phone || '',
   }
 
   const form = useForm<EventBasicsFormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as Resolver<EventBasicsFormValues>,
     defaultValues,
     mode: 'onChange',
   })
@@ -86,6 +103,9 @@ export function EventBasicsForm({ event }: EventBasicsFormProps) {
           guest_count: values.guest_count || null,
           budget: values.budget || null,
           city: values.city?.trim() || null,
+          contact_name: values.contact_name?.trim() || null,
+          contact_email: values.contact_email?.trim() || null,
+          contact_phone: values.contact_phone?.trim() || null,
         }
         // Remove helper fields
         delete (updateData as any).is_tbd
@@ -253,6 +273,56 @@ export function EventBasicsForm({ event }: EventBasicsFormProps) {
               </FormItem>
             )}
           />
+
+
+          {/* Contact Details Section */}
+          <div className="space-y-4 pt-4 border-t">
+            <h3 className="text-lg font-medium">Contact Details</h3>
+
+            <FormField
+              control={form.control}
+              name="contact_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Full Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} value={field.value || ''} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <FormField
+                control={form.control}
+                name="contact_email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="john@example.com" {...field} value={field.value || ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="contact_phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input placeholder="+1 234 567 890" {...field} value={field.value || ''} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
 
           {/* City */}
           <FormField

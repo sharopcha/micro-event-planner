@@ -24,7 +24,7 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
   const [stage, setStage] = useState<'venue' | 'services'>(
     selectedAddons.some(sa => {
       const addon = addons.find(a => a.id === sa.addon_id)
-      return (addon?.category as string) === 'venue'
+      return addon?.category === 'venue'
     }) ? 'services' : 'venue'
   )
   const [category, setCategory] = useState('decor')
@@ -35,12 +35,12 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
   })
   const [loadingId, setLoadingId] = useState<string | null>(null)
 
-  const venues = addons.filter(a => (a.category as string) === 'venue')
-  const filteredServices = addons.filter(a => a.category === category && (a.category as string) !== 'venue')
+  const venues = addons.filter(a => a.category === 'venue')
+  const filteredServices = addons.filter(a => a.category === category && a.category !== 'venue')
 
   const selectedVenueId = Object.keys(optimisticCart).find(id => {
     const addon = addons.find(a => a.id === id)
-    return (addon?.category as string) === 'venue' && optimisticCart[id] > 0
+    return addon?.category === 'venue' && optimisticCart[id] > 0
   })
 
   const handleSelectVenue = async (venue: Addon) => {
@@ -131,7 +131,14 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
         {stage === 'venue' ? (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-semibold">Choose Your Vibe</h2>
+              <div className="flex items-center gap-4">
+                <Link href={`/create/basics?id=${eventId}`}>
+                  <Button variant="ghost" size="sm">
+                    ← Back
+                  </Button>
+                </Link>
+                <h2 className="text-2xl font-semibold">Choose Your Vibe</h2>
+              </div>
               {selectedVenueId && (
                 <Button onClick={() => setStage('services')} className="group">
                   Next: Services <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />

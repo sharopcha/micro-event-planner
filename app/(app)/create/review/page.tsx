@@ -1,6 +1,6 @@
 import { getEvent } from '@/lib/actions/events'
 import { getEventAddons } from '@/lib/actions/addons'
-import { finalizeEvent } from '@/lib/actions/events-finalization'
+
 import { WizardProgress } from '@/components/wizard-progress'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,6 +9,9 @@ import { CalendarDays, Users, Wallet, MapPin, Check, Edit, ArrowLeft } from 'luc
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { format } from 'date-fns'
+
+import { ContactDetailsForm } from '@/components/contact-details-form'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function ReviewPage({
   searchParams,
@@ -20,6 +23,9 @@ export default async function ReviewPage({
   if (!id) {
     redirect('/create')
   }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   const event = await getEvent(id)
   if (!event) {
@@ -144,18 +150,19 @@ export default async function ReviewPage({
                  </div>
               </div>
 
-              <div className="flex flex-col gap-2">
-                <form action={finalizeEvent.bind(null, id)}>
-                  <Button className="w-full" size="lg">
-                    <Check className="mr-2 h-4 w-4" /> Finish & Create Invitation
-                  </Button>
-                </form>
-                <Link href={`/create/selection?id=${id}`}>
-                  <Button variant="ghost" className="w-full">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Selection
-                  </Button>
-                </Link>
-              </div>
+              <ContactDetailsForm
+                eventId={id}
+                defaultValues={{
+                  contact_name: user?.user_metadata?.full_name || '',
+                  contact_email: user?.email || '',
+                  contact_phone: user?.phone || '',
+                }}
+              />
+              <Link href={`/create/selection?id=${id}`}>
+                <Button variant="ghost" className="w-full">
+                  <ArrowLeft className="mr-2 h-4 w-4" /> Back to Selection
+                </Button>
+              </Link>
               <p className="text-xs text-center text-muted-foreground">
                 Secure payment via Stripe
               </p>

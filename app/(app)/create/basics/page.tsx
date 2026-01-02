@@ -2,6 +2,7 @@ import { getEvent } from '@/lib/actions/events'
 import { EventBasicsForm } from '@/components/event-basics-form'
 import { WizardProgress } from '@/components/wizard-progress'
 import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function CreateBasicsPage({
   searchParams,
@@ -9,7 +10,7 @@ export default async function CreateBasicsPage({
   searchParams: { id: string }
 }) {
   const { id } = await searchParams
-  
+
   if (!id) {
     redirect('/create')
   }
@@ -19,6 +20,15 @@ export default async function CreateBasicsPage({
   if (!event) {
     redirect('/create')
   }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const userDefaults = user ? {
+    name: user.user_metadata?.full_name,
+    email: user.email,
+    phone: user.phone
+  } : undefined
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -30,7 +40,7 @@ export default async function CreateBasicsPage({
       <WizardProgress currentStep={2} />
 
       <div className="max-w-2xl mx-auto border rounded-xl p-8 bg-card shadow-sm">
-        <EventBasicsForm event={event} />
+        <EventBasicsForm event={event} userDefaults={userDefaults} />
       </div>
     </div>
   )
