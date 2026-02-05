@@ -11,9 +11,12 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import Link from 'next/link'
 import { Loader2 } from 'lucide-react'
 
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
 export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState('user')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
@@ -29,6 +32,9 @@ export default function SignupPage() {
       password,
       options: {
         emailRedirectTo: `${location.origin}/auth/callback`,
+        data: {
+          role: role,
+        },
       },
     })
 
@@ -57,6 +63,19 @@ export default function SignupPage() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
+            <div className="space-y-2">
+              <Label>I am a...</Label>
+              <RadioGroup defaultValue="user" onValueChange={setRole} className="flex gap-4">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="user" id="r-user" />
+                  <Label htmlFor="r-user">User</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="admin" id="r-admin" />
+                  <Label htmlFor="r-admin">Event Planner</Label>
+                </div>
+              </RadioGroup>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input

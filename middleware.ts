@@ -30,18 +30,37 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protection logic
-  if (!user && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/login', request.url))
-  }
-  
-  if (!user && request.nextUrl.pathname.startsWith('/create')) {
+  const role = user?.user_metadata?.role || 'user'
+
+  // 1. Unauthenticated users protection
+  const protectedRoutes = ['/dashboard', '/create', '/admin', '/plan', '/profile']
+  const isProtectedRoute = protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))
+
+  if (!user && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  // Redirect if logged in
+  // 2. Authenticated users redirection (Logged in users trying to access login/signup)
   if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
+    if (role === 'admin') {
+      return NextResponse.redirect(new URL('/admin/addons', request.url))
+    }
     return NextResponse.redirect(new URL('/dashboard', request.url))
+  }
+
+  // 3. Admin Access Control (Admins shouldn't see user app)
+  if (user && role === 'admin') {
+    const userOnlyRoutes = ['/dashboard', '/create', '/plan', '/profile']
+    if (userOnlyRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
+      return NextResponse.redirect(new URL('/admin/addons', request.url))
+    }
+  }
+
+  // 4. User Access Control (Users shouldn't see admin)
+  if (user && role !== 'admin') {
+    if (request.nextUrl.pathname.startsWith('/admin')) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
   }
 
   return response

@@ -33,7 +33,14 @@ export default function LoginPage() {
       setError(error.message)
       setLoading(false)
     } else {
-      router.push('/dashboard')
+      const { data: { user } } = await supabase.auth.getUser()
+      const role = user?.user_metadata?.role
+
+      if (role === 'admin') {
+        router.push('/admin/addons')
+      } else {
+        router.push('/dashboard')
+      }
       router.refresh()
     }
   }
