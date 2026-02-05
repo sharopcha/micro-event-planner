@@ -1,4 +1,5 @@
 import { getUsersStats } from '@/lib/actions/users';
+import Link from 'next/link';
 import {
   Table,
   TableBody,
@@ -32,7 +33,11 @@ export default async function UsersPage() {
           <TableBody>
             {users.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>{user.email}</TableCell>
+                <TableCell>
+                  <Link href={`/admin/users/${user.id}`} className="hover:underline font-medium">
+                    {user.email}
+                  </Link>
+                </TableCell>
                 <TableCell>
                   {format(new Date(user.created_at), 'PPP')}
                 </TableCell>
