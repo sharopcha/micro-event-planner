@@ -12,16 +12,17 @@ export function AdminSidebar() {
             Admin
           </h2>
           <div className="space-y-1">
-            <Button variant="secondary" className="w-full justify-start" asChild>
+            <Button variant="ghost" className="w-full justify-start" asChild>
               <Link href="/admin/addons">
                 <Package className="mr-2 h-4 w-4" />
                 Addons
               </Link>
             </Button>
-            {/* Future links */}
-            <Button variant="ghost" className="w-full justify-start" disabled>
-              <Users className="mr-2 h-4 w-4" />
-              Users (Coming Soon)
+            <Button variant="ghost" className="w-full justify-start" asChild>
+              <Link href="/admin/users">
+                <Users className="mr-2 h-4 w-4" />
+                Users
+              </Link>
             </Button>
             <Button variant="ghost" className="w-full justify-start" disabled>
               <LayoutDashboard className="mr-2 h-4 w-4" />
