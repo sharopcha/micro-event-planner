@@ -75,6 +75,7 @@ export async function createAddon(data: AddonFormData) {
   }
 
   revalidatePath('/admin/addons');
+  revalidatePath('/create/selection');
   redirect('/admin/addons');
 }
 
@@ -102,6 +103,7 @@ export async function updateAddon(id: string, data: AddonFormData) {
   }
 
   revalidatePath('/admin/addons');
+  revalidatePath('/create/selection');
   redirect('/admin/addons');
 }
 
