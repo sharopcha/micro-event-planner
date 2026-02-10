@@ -119,12 +119,6 @@ export function EventBasicsForm({ event, userDefaults }: EventBasicsFormProps) {
   )
 
   const onSubmit = async () => {
-    // Manual save and continue
-    // Check required fields for "Next" button? 
-    // Spec says "Allow incomplete drafts", but "Only enable checkout when minimum".
-    // For navigation to Addons, we might not block, but good to validate.
-    
-    // Just navigate to addons
     router.push(`/create/selection?id=${event.id}`)
   }
 
