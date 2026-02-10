@@ -7,6 +7,7 @@ import { AddonCard } from '@/components/addon-card'
 import { VenueSelectionCard } from '@/components/venue-selection-card'
 import { Database } from '@/lib/supabase/types'
 import { addAddonToEvent, removeAddonFromEvent } from '@/lib/actions/addons'
+import { getAddonRecommendations } from '@/lib/actions/ai'
 import { toast } from 'sonner'
 import { Check, ChevronRight, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -38,11 +39,15 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
     return map
   })
   const [loadingId, setLoadingId] = useState<string | null>(null)
+  const [recommendedAddonIds, setRecommendedAddonIds] = useState<string[]>([])
+  const [isGenerating, setIsGenerating] = useState(false)
 
   const currentStep = stage === 'venue' ? 3 : stage === 'vision' ? 4 : 5
 
   const venues = addons.filter(a => a.category === 'venue')
-  const filteredServices = addons.filter(a => a.category === category && a.category !== 'venue')
+  const filteredServices = category === 'recommended'
+    ? addons.filter(a => recommendedAddonIds.includes(a.id))
+    : addons.filter(a => a.category === category && a.category !== 'venue')
 
   const selectedVenueId = Object.keys(optimisticCart).find(id => {
     const addon = addons.find(a => a.id === id)
@@ -180,8 +185,27 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button onClick={() => setStage('services')} className="group">
-                    Next: Services <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  <Button
+                    onClick={async () => {
+                      setIsGenerating(true)
+                      try {
+                        if (visionText.trim()) {
+                          const ids = await getAddonRecommendations(visionText, addons)
+                          setRecommendedAddonIds(ids)
+                          setCategory('recommended')
+                        }
+                        setStage('services')
+                      } catch (error) {
+                        toast.error('Failed to get recommendations')
+                        setStage('services')
+                      } finally {
+                        setIsGenerating(false)
+                      }
+                    }}
+                    className="group"
+                    disabled={isGenerating}
+                  >
+                    {isGenerating ? 'Analyzing...' : 'Next: Services'} <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </div>
               </div>
