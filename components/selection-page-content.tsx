@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { AddonCategoryTabs } from '@/components/addon-category-tabs'
+import { WizardProgress } from '@/components/wizard-progress'
 import { AddonCard } from '@/components/addon-card'
 import { VenueSelectionCard } from '@/components/venue-selection-card'
 import { Database } from '@/lib/supabase/types'
@@ -37,6 +38,8 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
     return map
   })
   const [loadingId, setLoadingId] = useState<string | null>(null)
+
+  const currentStep = stage === 'venue' ? 3 : stage === 'vision' ? 4 : 5
 
   const venues = addons.filter(a => a.category === 'venue')
   const filteredServices = addons.filter(a => a.category === category && a.category !== 'venue')
@@ -129,6 +132,10 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-20">
+      <div className="max-w-4xl mx-auto">
+        <WizardProgress currentStep={currentStep} />
+      </div>
+
       <div className="space-y-6">
         
         {stage === 'venue' ? (

@@ -1,6 +1,6 @@
 import { getEvent } from '@/lib/actions/events'
 import { getEventAddons } from '@/lib/actions/addons'
-import { WizardProgress } from '@/components/wizard-progress'
+
 import SelectionPageContent from '@/components/selection-page-content'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
@@ -38,9 +38,7 @@ export default async function SelectionPage({
         <p className="text-muted-foreground">Pick a venue and customize with services.</p>
       </div>
 
-      <div className="max-w-4xl mx-auto">
-        <WizardProgress currentStep={3} />
-      </div>
+
 
       <SelectionPageContent 
         eventId={id}

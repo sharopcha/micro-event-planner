@@ -5,15 +5,17 @@ import { Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface WizardProgressProps {
-  currentStep: number // 1: Type, 2: Basics, 3: Addons, 4: Review
+  currentStep: number // 1: Type, 2: Basics, 3: Venue, 4: Vision, 5: Services, 6: Review
 }
 
 export function WizardProgress({ currentStep }: WizardProgressProps) {
   const steps = [
     { number: 1, label: 'Type' },
     { number: 2, label: 'Basics' },
-    { number: 3, label: 'Selection' },
-    { number: 4, label: 'Review' },
+    { number: 3, label: 'Venue' },
+    { number: 4, label: 'Vision' },
+    { number: 5, label: 'Services' },
+    { number: 6, label: 'Review' },
   ]
 
   const progress = (currentStep / steps.length) * 100

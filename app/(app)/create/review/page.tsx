@@ -44,7 +44,7 @@ export default async function ReviewPage({
         <p className="text-muted-foreground">Everything look good? Ready to finalize.</p>
       </div>
 
-      <WizardProgress currentStep={4} />
+      <WizardProgress currentStep={6} />
 
       <div className="grid gap-6 md:grid-cols-3">
         {/* Main Details */}
