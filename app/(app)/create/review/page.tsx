@@ -1,5 +1,6 @@
 import { getEvent } from '@/lib/actions/events'
 import { getEventAddons } from '@/lib/actions/addons'
+import { getInvoiceData } from '@/lib/actions/invoice'
 
 import { WizardProgress } from '@/components/wizard-progress'
 import { Button } from '@/components/ui/button'
@@ -11,6 +12,7 @@ import { redirect } from 'next/navigation'
 import { format } from 'date-fns'
 
 import { ContactDetailsForm } from '@/components/contact-details-form'
+import { InvoiceDialog } from '@/components/invoice-dialog'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function ReviewPage({
@@ -36,6 +38,7 @@ export default async function ReviewPage({
   // But strictly speaking we should query the latest total. event.total_price comes from DB.
   
   const addons = await getEventAddons(id)
+  const invoiceData = await getInvoiceData(id)
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -168,6 +171,19 @@ export default async function ReviewPage({
                   )
                 })()}
               </div>
+
+              {invoiceData && (
+                <InvoiceDialog
+                  eventId={id}
+                  event={invoiceData.event}
+                  venue={invoiceData.venue}
+                  addons={invoiceData.addons}
+                  venueTotal={invoiceData.venueTotal}
+                  addonsTotal={invoiceData.addonsTotal}
+                  total={invoiceData.total}
+                  userEmail={user?.email || ''}
+                />
+              )}
 
               <ContactDetailsForm
                 eventId={id}
