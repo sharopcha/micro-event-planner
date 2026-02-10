@@ -39,9 +39,16 @@ export default async function ReviewPage({
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      <div className="space-y-2 text-center">
-        <h1 className="text-3xl font-bold">Review Your Plan</h1>
-        <p className="text-muted-foreground">Everything look good? Ready to finalize.</p>
+      <div className="relative">
+        <Link href={`/create/selection?id=${id}`} className="absolute left-0 top-2">
+          <Button variant="ghost" size="sm">
+            ← Back
+          </Button>
+        </Link>
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold">Review Your Plan</h1>
+          <p className="text-muted-foreground">Everything look good? Ready to finalize.</p>
+        </div>
       </div>
 
       <WizardProgress currentStep={6} />

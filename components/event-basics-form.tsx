@@ -125,6 +125,25 @@ export function EventBasicsForm({ event, userDefaults }: EventBasicsFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex justify-between items-center pb-4 border-b mb-6">
+          <div className="flex items-center gap-4">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push('/create')}
+            >
+              ← Back
+            </Button>
+            <p className="text-sm text-muted-foreground self-center">
+              {isSaving ? 'Saving...' : 'Draft saved'}
+            </p>
+          </div>
+          <Button type="submit">
+            Next: Selection
+          </Button>
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2">
           
           {/* Event Name */}
@@ -337,23 +356,8 @@ export function EventBasicsForm({ event, userDefaults }: EventBasicsFormProps) {
           />
         </div>
 
-        <div className="flex justify-between pt-6">
-          <div className="flex gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => router.push('/create')}
-            >
-              Back
-            </Button>
-            <p className="text-sm text-muted-foreground self-center">
-              {isSaving ? 'Saving...' : 'Draft saved'}
-            </p>
-          </div>
-           <Button type="submit" size="lg">
-            Next: Selection
-           </Button>
-        </div>
+
+
       </form>
     </Form>
   )

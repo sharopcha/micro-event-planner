@@ -170,13 +170,12 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
         ) : stage === 'vision' ? (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Button variant="outline" size="sm" onClick={() => setStage('venue')}>
-                  ← Change Venue
+                <div className="flex items-center gap-4">
+                  <Button variant="ghost" size="sm" onClick={() => setStage('venue')}>
+                    ← Back
                 </Button>
                   <div className="space-y-1">
                     <h2 className="text-2xl font-semibold">Share Your Vision</h2>
-                    <p className="text-muted-foreground text-sm">Tell us about the atmosphere you want to create.</p>
                   </div>
                 </div>
 
@@ -206,12 +205,12 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
           ) : (
             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <Button variant="outline" size="sm" onClick={() => setStage('vision')}>
-                    ← Back to Vision
+                  <div className="flex items-center gap-4">
+                    <Button variant="ghost" size="sm" onClick={() => setStage('vision')}>
+                      ← Back
                   </Button>
-                <h2 className="text-2xl font-semibold">Personalize Your Event</h2>
-              </div>
+                    <h2 className="text-2xl font-semibold">Personalize Your Event</h2>
+                  </div>
               
               <Link href={`/create/review?id=${eventId}`}>
                 <Button className="group" size="lg">
