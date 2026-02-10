@@ -125,7 +125,7 @@ export default async function ReviewPage({
                            <p className="text-xs text-muted-foreground">x{item.quantity}</p>
                          </div>
                        </div>
-                       <div className="font-medium">€{item.price_at_purchase * item.quantity}</div>
+                      <div className="font-medium">€{(item.price_at_purchase * item.quantity).toFixed(2)}</div>
                     </div>
                   ))}
                 </div>
@@ -142,19 +142,31 @@ export default async function ReviewPage({
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                 <div className="flex justify-between text-sm">
-                   <span className="text-muted-foreground">Event Package</span>
-                   <span>€0.00</span>
-                 </div>
-                 <div className="flex justify-between text-sm mb-2">
-                   <span className="text-muted-foreground">Addons ({addons.reduce((acc: number, curr: any) => acc + curr.quantity, 0)})</span>
-                   <span>€{event.total_price}</span>
-                 </div>
-                 <Separator />
-                 <div className="flex justify-between font-bold text-lg pt-2">
-                   <span>Total</span>
-                   <span>€{event.total_price}</span>
-                 </div>
+                {(() => {
+                  const venueAddons = addons.filter((item: any) => item.addons.category === 'venue')
+                  const otherAddons = addons.filter((item: any) => item.addons.category !== 'venue')
+                  const venuePrice = venueAddons.reduce((sum: number, item: any) => sum + (item.price_at_purchase * item.quantity), 0)
+                  const addonsPrice = otherAddons.reduce((sum: number, item: any) => sum + (item.price_at_purchase * item.quantity), 0)
+                  const totalAddonCount = otherAddons.reduce((acc: number, curr: any) => acc + curr.quantity, 0)
+
+                  return (
+                    <>
+                       <div className="flex justify-between text-sm">
+                         <span className="text-muted-foreground">Event Package</span>
+                         <span>€{venuePrice.toFixed(2)}</span>
+                       </div>
+                       <div className="flex justify-between text-sm mb-2">
+                         <span className="text-muted-foreground">Addons ({totalAddonCount})</span>
+                         <span>€{addonsPrice.toFixed(2)}</span>
+                       </div>
+                       <Separator />
+                       <div className="flex justify-between font-bold text-lg pt-2">
+                         <span>Total</span>
+                         <span>€{(venuePrice + addonsPrice).toFixed(2)}</span>
+                       </div>
+                    </>
+                  )
+                })()}
               </div>
 
               <ContactDetailsForm

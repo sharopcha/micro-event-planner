@@ -216,10 +216,12 @@ export async function getEventAddons(eventId: string) {
     .select(`
       addon_id,
       quantity,
+      price_at_purchase,
       addons (
         id,
         name,
-        price
+        price,
+        category
       )
     `)
     .eq('event_id', eventId);

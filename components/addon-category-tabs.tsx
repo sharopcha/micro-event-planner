@@ -9,6 +9,7 @@ interface AddonCategoryTabsProps {
   selectedCategory: string
   onSelect: (category: string) => void
   counts?: Record<string, number>
+  excludeCategories?: AddonCategory[]
 }
 
 const categories: { id: AddonCategory; label: string }[] = [
@@ -22,7 +23,9 @@ const categories: { id: AddonCategory; label: string }[] = [
   { id: 'extras', label: 'Extras' },
 ]
 
-export function AddonCategoryTabs({ selectedCategory, onSelect, counts }: AddonCategoryTabsProps) {
+export function AddonCategoryTabs({ selectedCategory, onSelect, counts, excludeCategories = [] }: AddonCategoryTabsProps) {
+  const filteredCategories = categories.filter(cat => !excludeCategories.includes(cat.id))
+
   return (
     <Tabs value={selectedCategory} onValueChange={onSelect} className="w-full">
       <TabsList className="w-full h-auto flex-wrap justify-start">
@@ -34,7 +37,7 @@ export function AddonCategoryTabs({ selectedCategory, onSelect, counts }: AddonC
             </span>
           ) : null}
         </TabsTrigger>
-        {categories.map((category) => (
+        {filteredCategories.map((category) => (
           <TabsTrigger key={category.id} value={category.id} className="capitalize">
             {category.label}
              {counts && counts[category.id] ? (

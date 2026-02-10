@@ -41,10 +41,12 @@ export async function getAddonRecommendations(vision: string, addons: Addon[]) {
 
     const result = JSON.parse(content)
     console.log({result, addonsList})
-    // Handle case where it might return { "ids": [...] } or just [...]
+    // Handle case where it might return { "ids": [...] } or just [...] or { "addons": [...] }
     const ids = Array.isArray(result) ? result : 
                 Array.isArray(result.ids) ? result.ids : 
-                Array.isArray(result.recommendations) ? result.recommendations : []
+                Array.isArray(result.recommendations) ? result.recommendations : 
+                Array.isArray(result.addons) ? result.addons : 
+                Array.isArray(result.recommended_addons) ? result.recommended_addons : []
     
     return ids as string[]
   } catch (error) {
