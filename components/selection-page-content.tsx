@@ -9,6 +9,8 @@ import { addAddonToEvent, removeAddonFromEvent } from '@/lib/actions/addons'
 import { toast } from 'sonner'
 import { Check, ChevronRight, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
 type Addon = Database['public']['Tables']['addons']['Row']
@@ -21,12 +23,13 @@ interface SelectionPageContentProps {
 }
 
 export default function SelectionPageContent({ eventId, addons, selectedAddons }: SelectionPageContentProps) {
-  const [stage, setStage] = useState<'venue' | 'services'>(
+  const [stage, setStage] = useState<'venue' | 'vision' | 'services'>(
     selectedAddons.some(sa => {
       const addon = addons.find(a => a.id === sa.addon_id)
       return addon?.category === 'venue'
-    }) ? 'services' : 'venue'
+    }) ? 'vision' : 'venue' // Default to vision if venue selected, else venue
   )
+  const [visionText, setVisionText] = useState('')
   const [category, setCategory] = useState('decor')
   const [optimisticCart, setOptimisticCart] = useState<Record<string, number>>(() => {
     const map: Record<string, number> = {}
@@ -140,8 +143,8 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
                 <h2 className="text-2xl font-semibold">Choose Your Vibe</h2>
               </div>
               {selectedVenueId && (
-                <Button onClick={() => setStage('services')} className="group">
-                  Next: Services <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <Button onClick={() => setStage('vision')} className="group">
+                  Next: Vision <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                 </Button>
               )}
             </div>
@@ -157,13 +160,49 @@ export default function SelectionPageContent({ eventId, addons, selectedAddons }
               ))}
             </div>
           </div>
-        ) : (
+        ) : stage === 'vision' ? (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Button variant="outline" size="sm" onClick={() => setStage('venue')}>
                   ← Change Venue
                 </Button>
+                  <div className="space-y-1">
+                    <h2 className="text-2xl font-semibold">Share Your Vision</h2>
+                    <p className="text-muted-foreground text-sm">Tell us about the atmosphere you want to create.</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button onClick={() => setStage('services')} className="group">
+                    Next: Services <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="max-w-2xl mx-auto py-8 space-y-4">
+                <div className="grid w-full gap-2">
+                  <Label htmlFor="vision">Describe your dream event</Label>
+                  <Textarea
+                    id="vision"
+                    placeholder="E.g., I want a rustic theme with lots of flowers and soft lighting..."
+                    className="min-h-[200px] text-lg p-4 resize-none"
+                    value={visionText}
+                    onChange={(e) => setVisionText(e.target.value)}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    We'll use this description to suggest the perfect addons for you in the next step.
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Button variant="outline" size="sm" onClick={() => setStage('vision')}>
+                    ← Back to Vision
+                  </Button>
                 <h2 className="text-2xl font-semibold">Personalize Your Event</h2>
               </div>
               
